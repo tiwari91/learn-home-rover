@@ -270,6 +270,7 @@ function wireStates() {
 			else if (i === Li && j < doneCount(les)) st[id] = "on";
 		}
 	}));
+	for (const id of L.hot || []) if (st[id] === "dim") st[id] = "on";
 	return st;
 }
 const ghostColor = () => new THREE.Color(css("--stage")).lerp(new THREE.Color(css("--ink-3")), 0.25).getHex();
@@ -364,8 +365,9 @@ function explain(t, n, name, want) {
 }
 $("autoWire").onclick = () => {
 	let k = 0;
+	const mine = L;
 	const step = () => {
-		if (!L || allWired(L)) return;
+		if (!L || L !== mine || allWired(L)) return;
 		const t = L.tasks[doneCount(L)];
 		completeTask(t.type === "pin" ? `Pin ${t.pin} (${HEADER[t.pin]}).` : `${t.options.find((o) => o.ok).t}.`);
 		if (!allWired(L) && k++ < 20) setTimeout(step, reduced ? 0 : 250);
@@ -431,6 +433,7 @@ function leaveLesson() {
 	if (sim) { sim.stop(ui); sim.teardown && sim.teardown(ui); }
 	sim = null; running = false;
 	animators.clear();
+	for (const w of Object.values(model.wires)) w.tube.geometry.setDrawRange(0, Infinity);   // finish any half-drawn wire
 	beam.visible = false; showMarker(null);
 	world.lifted = false; setObstacles([]); world.reset(); syncRover();
 	$("bench").innerHTML = ""; $("hud").innerHTML = ""; $("console").textContent = "";
@@ -470,6 +473,7 @@ function showLesson(i) {
 	goCam(L.cam, true);
 	$("panel").scrollTop = 0; window.scrollTo(0, 0);
 	progress.last = i; save();
+	refreshProgress();
 }
 function route() {
 	const m = location.hash.match(/^#\/lesson\/(\d+)/);

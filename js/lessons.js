@@ -244,6 +244,7 @@ export const LESSONS = [
 	},
 	{
 		id: "spin", title: "Spin one wheel", short: "drive.py --test, with the rover on a book.",
+		hot: ["outL1", "outL2", "outR1", "outR2", "in1", "in2", "in3", "in4"],
 		focus: ["wheelL", "wheelR", "motorL", "motorR", "l298"], cam: "side",
 		body: [
 			"Before the rover touches the floor, test each wheel on its own. Put it on a book so the wheels are in the air, then run <code>python3 drive.py --test</code> over SSH.",
@@ -275,6 +276,7 @@ export const LESSONS = [
 	},
 	{
 		id: "drive", title: "Drive and turn", short: "No steering wheel: two speeds, left and right.",
+		hot: ["outL1", "outL2", "outR1", "outR2"],
 		focus: ["wheelL", "wheelR"], cam: "floor",
 		body: [
 			"The rover has no steering. It turns by running its two wheels at different speeds. This is <b>differential drive</b>.",
@@ -287,6 +289,7 @@ export const LESSONS = [
 	},
 	{
 		id: "watchdog", title: "The dead-man watchdog", short: "Every command expires after 0.5 s.",
+		hot: ["in1", "in2", "in3", "in4", "ena", "enb"],
 		focus: ["pi", "wheelL", "wheelR"], cam: "floor",
 		body: [
 			"What if the SSH session freezes while the rover is driving forward, or the phone loses Wi-Fi? Without a rule, the motors keep the last command forever.",
@@ -321,6 +324,7 @@ export const LESSONS = [
 	},
 	{
 		id: "stop", title: "Stop before obstacles", short: "The 20 cm rule, and why reversing still works.",
+		hot: ["sVcc", "sTrig", "sEcho", "sGnd", "sDiv", "sGnd39"],
 		focus: ["sonar", "wheelL", "wheelR"], cam: "floor",
 		body: [
 			"With a distance reading, <code>Drive</code> gets one more rule: forward motion is refused when the sensor reads under 20 cm.",
@@ -350,6 +354,7 @@ export const LESSONS = [
 	},
 	{
 		id: "phone", title: "Drive from the phone", short: "A WebSocket, ten messages a second.",
+		hot: ["ribbon", "usb"],
 		focus: ["pi", "cam", "wheelL", "wheelR"], cam: "floor",
 		body: [
 			"<code>python3 -m rover.server</code> starts a small FastAPI server on port 8000. Open <code>http://&lt;pi-hostname&gt;.local:8000</code> on a phone on the same Wi-Fi: live video, a D-pad, a joystick and a speed slider.",
@@ -362,6 +367,7 @@ export const LESSONS = [
 	},
 	{
 		id: "explore", title: "Explore mode", short: "A three-state machine that drives itself.",
+		hot: ["sVcc", "sTrig", "sEcho", "sGnd", "sDiv", "sGnd39"],
 		focus: ["sonar", "wheelL", "wheelR"], cam: "floorWide",
 		body: [
 			"Explore makes the rover drive itself with three states. <b>Forward</b> at half speed. When the distance drops under 20 cm: <b>back off</b> for 0.6 s. Then <b>turn</b> a random way for 0.5 to 1 s. Still blocked after turning? Keep turning another 0.5 s. Then forward again.",
@@ -373,6 +379,7 @@ export const LESSONS = [
 	},
 	{
 		id: "night", extra: true, title: "Night mode", short: "Long exposure, and motion detection by frame differencing.",
+		hot: ["ribbon"],
 		focus: ["cam"], cam: "camera",
 		body: [
 			"The Night button switches the camera to a 100 ms exposure and analogue gain 8, which caps it at 10 frames a second. Fine for a parked rover.",
@@ -385,6 +392,7 @@ export const LESSONS = [
 	},
 	{
 		id: "ros", extra: true, title: "Next: ROS 2", short: "/cmd_vel in, /range out. Written, not yet tested.",
+		hot: ["outL1", "outL2", "outR1", "outR2", "sTrig", "sDiv"],
 		focus: ["pi", "sonar", "wheelL", "wheelR"], cam: "floor",
 		body: [
 			"The repo has a ROS 2 Jazzy package, <code>rover_base</code>, that does the same job the ROS way. It has <b>not been tested on hardware</b> yet.",

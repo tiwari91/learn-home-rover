@@ -35,7 +35,8 @@ test("pin table matches the rover's wiring", async ({ page }) => {
 	expect(ok).toBe(true);
 });
 
-test("every lesson opens and Run starts", async ({ page }) => {
+test("every lesson opens and Run completes", async ({ page }) => {
+	test.setTimeout(420_000);
 	const errors = watchErrors(page);
 	await page.goto("./");
 	await ready(page);
@@ -46,10 +47,11 @@ test("every lesson opens and Run starts", async ({ page }) => {
 		await expect(page.locator("#runBtn")).toBeEnabled({ timeout: 10_000 });
 		await page.click("#runBtn");
 		await expect(page.locator("#stopBtn")).toBeEnabled();
-		await page.waitForTimeout(700);
+		await expect(page.locator("#runNote"), `lesson ${i}`).toContainText("Lesson done", { timeout: 90_000 });
 		await expect(page.locator("#console")).not.toBeEmpty();
-		await page.click("#stopBtn");
 	}
+	await page.goto("./");
+	await expect(page.locator("#progressPill")).toContainText("14 / 14");
 	expect(errors).toEqual([]);
 });
 
