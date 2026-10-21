@@ -1,0 +1,11 @@
+{
+  "name": "learn-home-rover",
+  "private": true,
+  "scripts": {
+    "serve": "python3 -m http.server 8123 --directory ..",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}

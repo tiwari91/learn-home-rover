@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Learn Home Rover</title>
+<meta name="description" content="Short interactive lessons for a Raspberry Pi rover: wire it in 3D, run the real code, watch it drive.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23161a1d'/%3E%3Crect x='7' y='11' width='18' height='9' rx='2' fill='%23ff7a50'/%3E%3Ccircle cx='11' cy='22' r='3' fill='%23e8eae6'/%3E%3Ccircle cx='21' cy='22' r='3' fill='%23e8eae6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<div id="loader" class="loader" role="status" aria-live="polite">
+	<div class="loader-box">
+		<div class="loader-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+		<p class="loader-text" id="loaderText">Fetching three.js</p>
+		<div class="loader-bar"><i id="loaderBar"></i></div>
+	</div>
+</div>
+
+<header class="top">
+	<a class="brand" href="#/">
+		<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="10" width="22" height="10" rx="2"/><circle cx="10" cy="23" r="3.4"/><circle cx="22" cy="23" r="3.4"/><rect x="24" y="12" width="4" height="3"/></svg>
+		<span>Home Rover <em>lessons</em></span>
+	</a>
+	<nav class="top-nav">
+		<a href="#/" id="navLessons">Lessons</a>
+		<span class="progress-pill" id="progressPill" title="Lessons done">0 / 0</span>
+		<button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle dark mode">
+			<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+		</button>
+	</nav>
+</header>
+
+<main id="home" class="home" hidden>
+	<section class="hero">
+		<div class="hero-copy">
+			<p class="eyebrow">Raspberry Pi 4 · L298N · HC-SR04 · Pi Camera</p>
+			<h1>Build the rover one wire at a time.</h1>
+			<p class="lede">Short lessons for a two-wheel Raspberry Pi rover. Each one puts the right parts in front of you, asks you to make the connections, then runs the real code from the rover's repo on a simulated floor.</p>
+			<div class="hero-actions">
+				<a class="btn primary" id="startBtn" href="#/lesson/1">Start lesson 1</a>
+				<button class="btn ghost" id="resetBtn" type="button">Reset progress</button>
+			</div>
+			<dl class="specs">
+				<div><dt>Brain</dt><dd>Raspberry Pi 4</dd></div>
+				<div><dt>Motors</dt><dd>2 gear motors, L298N</dd></div>
+				<div><dt>Power</dt><dd>2×18650 + USB bank</dd></div>
+				<div><dt>Senses</dt><dd>HC-SR04, Pi Camera v1.3</dd></div>
+			</dl>
+		</div>
+		<div class="hero-stage" id="heroSlot"><p class="stage-hint">Drag to turn it around</p></div>
+	</section>
+	<section class="course" aria-labelledby="courseTitle">
+		<div class="course-head">
+			<h2 id="courseTitle">Lessons</h2>
+			<p id="courseCount"></p>
+		</div>
+		<ol class="cards" id="cards"></ol>
+	</section>
+	<footer class="foot">
+		<p>Rover code lives in a private repo; the snippets here are copied from it, and the parts and pins match its README. The ROS 2 lesson describes code that has not been tested on hardware.</p>
+	</footer>
+</main>
+
+<main id="lesson" class="lesson" hidden>
+	<div class="lesson-stage">
+		<div class="stage-slot" id="lessonSlot"></div>
+		<div class="hud" id="hud" aria-live="polite"></div>
+		<div class="stage-tools">
+			<button class="chip" id="viewReset" type="button">Reset view</button>
+		</div>
+	</div>
+	<article class="panel" id="panel">
+		<div class="panel-head">
+			<p class="lesson-num" id="lessonNum"></p>
+			<h1 id="lessonTitle"></h1>
+		</div>
+		<div class="lesson-body" id="lessonBody"></div>
+
+		<section class="block" id="wireBlock" aria-labelledby="wireTitle">
+			<h2 id="wireTitle"><span class="step">1</span>Make the connections</h2>
+			<ol class="tasks" id="tasks"></ol>
+			<div class="feedback" id="feedback" role="status" aria-live="polite"></div>
+			<div class="header-wrap" id="headerWrap" hidden>
+				<p class="header-cap">Pi header. Board edge on the right; pin 1 at the top.</p>
+				<div class="gpio" id="gpio" role="group" aria-label="Raspberry Pi 40-pin header"></div>
+			</div>
+			<button class="link-btn" id="autoWire" type="button">Show me the answers</button>
+		</section>
+
+		<section class="block" aria-labelledby="codeTitle">
+			<h2 id="codeTitle"><span class="step" id="codeStep">2</span>Run the code</h2>
+			<div class="code">
+				<div class="code-bar"><span id="codeFile"></span></div>
+				<pre><code id="codeSrc"></code></pre>
+			</div>
+			<div class="run-row">
+				<button class="btn primary" id="runBtn" type="button">Run</button>
+				<button class="btn ghost" id="stopBtn" type="button" disabled>Stop</button>
+				<span class="run-note" id="runNote"></span>
+			</div>
+			<div class="bench" id="bench"></div>
+			<pre class="console" id="console" aria-label="Output"></pre>
+		</section>
+
+		<nav class="lesson-nav">
+			<a class="btn ghost" id="prevLesson" href="#/">Previous</a>
+			<a class="btn primary" id="nextLesson" href="#/">Next lesson</a>
+		</nav>
+	</article>
+</main>
+
+<script type="importmap">
+{ "imports": {
+	"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+	"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<script>
+	try { const t = localStorage.getItem("lhr-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+	window.addEventListener("error", function () { var t = document.getElementById("loaderText"); if (t && document.getElementById("loader").isConnected) t.textContent = "Something failed to load. Check the connection and reload."; });
+</script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
